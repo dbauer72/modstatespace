@@ -1,0 +1,174 @@
+---
+title: "Data structures used in `modstatespace`"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Data structures used in `modstatespace`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+`modstatespace` uses `tsibble` from the package `tsibble` (part of the tidyverse) as the data container.
+This has the advantage that one can use all the amenities from the package for real 
+world data series. The downside is that the `tsibble` data container is somewhat clumsy for multivariate, simulated, balanced time series. Hence we need converter functions to compile data matrices from the `tsibble`. This vignette provides the basis for working with `tsibble` in the context of `modtstatespace`. 
+
+# Working with `tsibble` 
+Imagine you have s simple quarterly time series `ts_quart`, or a yearly times series `ts_year`:
+
+```{r}
+(ts_quart <- sin(ts(1:20, frequency=4,  start=c(1959, 2))))
+(ts_year  <- cos(ts(1:34, frequency=12, start=c(1959, 2))))
+
+qtr <- yearquarter("1959 Q2")
+
+ts_quart <- tsibble(
+  time = qtr+(0:19),
+  y = sin(1:20),
+  index = time
+)
+
+ts_quart
+
+month <- yearmonth("1959 Feb")
+
+ts_month <- tsibble(
+  time = month + (0:33),
+  y = cos(1:34),
+  index = time
+)
+
+ts_month
+```
+
+The data can be plotted easily:
+
+```{r}
+autoplot(ts_quart)
+```
+Note, however, that the intuitive command `plot(ts_quart)` produces a scatter plot rather than a time series plot. 
+
+The plot can be manipulated using the `ggplot2` structure by adding components to the plot, for details see [@Hyndman], Chapter 2.
+
+```{r}
+autoplot(ts_month) +
+  labs(title = "Monthly data",
+       subtitle = "Cosine wave",
+       y = "Observations")
+```
+
+By using the `tsibble` data structure, we may use the features like seasonal plotting: 
+
+```{r}
+gg_season(ts_month)
+```
+
+
+# Inspecting the autocorrelation
+
+The autocorrelation present in the time series can be investigated visually by plotting the time series against its lags: 
+
+```{r}
+gg_lag(ts_month, geom = "point")
+gg_lag(ts_month, geom = "path")
+
+```
+
+In order to get some more quantitative information, one uses the pair of ACF and PACF: 
+
+```{r}
+ACF(ts_month, lag_max = 10)
+PACF(ts_month, lag_max = 10)
+
+```
+The command generates `tsibbles` containing the ACF and PACF data. These need to be plotted to obtain the familiar autocorrelogramm plots:
+
+```{r}
+ACF(ts_month, lag_max = 10) |> autoplot() + labs(title ="ACF")
+PACF(ts_month, lag_max = 10) |> autoplot() + labs(title ="PACF")
+
+```
+
+
+# Working with multivariate data sets 
+Next consider you do not have only one observation in each month but multiple: 
+
+```{r}
+month <- yearmonth("1959 Feb")
+
+ts_month <- tsibble(
+  time = month+(0:33),
+  y1 = cos(1:34),
+  y2 = rnorm(34,0,1),
+  index = time
+)
+
+ts_month
+```
+Now plotting must indicate, which variable is to be plotted: 
+
+```{r}
+autoplot(ts_month,y2)
+```
+
+Alternatively, we may introduce an additional variable indicating the different variables: 
+
+```{r}
+month <- yearmonth("1959 Feb")
+
+t_rep <- c(month+ (0:33),month + (0:33))
+obs <- c(cos(1:34),rnorm(34,0,1))
+vars <- c(rep("y1",34),rep("y2",34))
+
+ts_month <- tsibble(
+  time = t_rep,
+  y = obs,
+  vars = vars,
+  index = time,
+  key = vars
+)
+
+ts_month
+autoplot(ts_month)
+```
+
+The additional variable `key` provides the key to the various variables. The plotting command then combines all variables in a single plot. Extracting one coordinate then can be achieved by filtering: 
+
+```{r}
+ts_month |> filter( vars == "y2") |> autoplot()
+```
+This is, how `ACF` and `PACF` react to multivariate data: 
+
+```{r}
+ACF(ts_month) |> autoplot()
+PACF(ts_month) |> autoplot()
+```
+
+# Converting balanced `tsibble` to matrices 
+For our procedures we require the data to be stored in a matrix object with rows 
+corresponding to time points and columns to variables. The conversion of a `tsibble` 
+assumes that the multivariate time series is balanced such that for each time step 
+there exists exactly one observation for each coordinate.
+
+```{r}
+dat_mat <- tsibble_to_mat(ts_month)
+dat_mat
+```
+
+This assumes that the data is stored in a variable named `y`. Adding the argument `var_name` one may indicate a different variable name. 
+
+## References 

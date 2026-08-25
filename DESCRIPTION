@@ -1,0 +1,29 @@
+Package: modstatespace
+Type: Package
+Title: Provides State Space Modelling approaches
+Version: 0.1.2
+Authors@R: c(person(given="Alexander", "Stiebing", email = "astiebing@uni-bielefeld.de", role = c("ctb")),
+    person("Dietmar", "Bauer", email = "dietmar.bauer@uni-bielefeld.de", role = c("aut", "cre")))
+Maintainer: Dietmar Bauer <dietmar.bauer@uni-bielefeld.de>
+Description: State Space Modelling approaches via companion matrix, CVA and qMLE.
+License: LGPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+Imports: 
+    ggplot2,
+    stats,
+    dplyr,
+    tibble,
+    shiny,
+    tsibble,
+    FKF
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    datasets,
+    fpp3
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

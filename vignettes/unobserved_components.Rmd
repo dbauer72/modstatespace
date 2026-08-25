@@ -1,0 +1,145 @@
+---
+title: "Working with unobserved components models"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Working with unobserved components models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  % \VignetteDepends{fpp3}
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+# Unobserved Component Models: Definition
+The main functionality in this package is used to estimate 'general 
+purpose' state space models in the innovation representation. This class of state space models is close to the autoregressive moving average (ARMA) modeling familiar to econometricians. 
+
+A second class of state space system follows a different paradigm. *Unobserved components* models (UC) originate in the tradition of 
+component models for time series. These decompose a time series into a 
+trend, a seasonal component and remainder terms. The remainder terms often
+are modeled using the ARMA model class. This vignette describes one way to include such models into the framework of this package. The implementation is not optimal, in particular estimation is not fully developed. The vignette serves mainly to illustrate, what one has to do in order to provide functionality for
+this model class. 
+
+
+The trend can be modeled using deterministic and stochastic trends. 
+Typical deterministic trends are a constant and a linear trend of the form $b*t$. A stochastic trend is given by a random walk. Jointly these can be seen as solutions to the different equation
+
+$$
+d_t = d_{t-1} + u_t. 
+$$
+If $u_t = 1$ we obtain a linear trend, if $u_t$ is a zero expectation 
+white noise process, we obtain a random walk. If $u_t$ is white noise with
+non-zero expectation we get a random walk with a drift. 
+
+Adding a second integration we obtain an even smoother trend process:
+
+$$
+T_t = T_{t-1} + d_t + v_t. 
+$$
+A seasonal process can be obtained from introducing lags into the difference equation: For quarterly data we may consider the solution to the equation: 
+
+$$
+s_t = s_{t-4} + e_{t}
+$$
+which shows a yearly cycle. If $e_t=0$ the solutions to the equation are proportional to seasonal dummies, for non-zero noise $u_t$ we achieve seasonal common cycles. 
+
+These equations can be combined as equations for the state process:
+
+$$
+x_t = \begin{pmatrix}
+T_t \\ d_t \\ s_{t} \\ s_{t-1} \\ s_{t-2} \\ s_{t-3} 
+\end{pmatrix} = 
+\begin{pmatrix} 1 & 1 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 
+\end{pmatrix} x_{t-1} + 
+\begin{pmatrix} 
+v_t \\ u_t \\ e_{t,1} \\ e_{t,2} \\ e_{t,3} \\ e_{t,4}  
+\end{pmatrix} 
+$$
+
+This provides the state equation. We can choose, which components we want to have present: For time series without a strong trend, we may omit $T_t$. If there is no trend at all, we may also omit $d_t$. Converselvy, if we do not want to model seasonality the terms $s_t$ can be omitted. 
+
+Beside the trends and the seasonality, the state may also include ARMA like components: 
+
+$$
+x_t = A x_{t-1} + \varepsilon_t. 
+$$
+
+The second part of the UC model consists of the observation process:
+
+$$
+y_t = C x_t + \varepsilon_t. 
+$$
+
+Clearly the scaling of the state components depends on the noise variance present there. In order to avoid identifiability issues, the variances can be chosen as $1$. Otherwise we have to impose restrictions on $C$. 
+
+# Working with UC Models 
+In order to work with UC models, we need to adapt some of the procedures for estimating and 
+evaluating the model: 
+
+- `param_syst_uc` this implements the parameterisation of the UC models, 
+- `cal_crit_uc` calculation of the criterion function,
+- `est_uc` implements the estimation procedure
+
+The most important here is the parameterisation procedure. This implements the model, in this procedure the parameters in the vector $\theta$ are distributed into the various matrices. The author of this parameterisation must ensure that the parameters are identifiable. 
+
+In this procedure we also specify the components to be included in the model. In the following example we include a doubly integrated trend, seasonal components for a quartly time series and am AR(1) term. The observation noise is set to have variance equal to $1$:
+
+```{r}
+theta <- c(.01,.01,1,1,1,1,1,0.5,1)
+
+(syst <- param_syst_uc(theta))
+y <- sim_syst(syst,T=1000, stationary = FALSE)
+autoplot(y)
+```
+
+We can see the doubly integrated trend resulting in a smooth curve. Zooming in on the first 40 observations we can see the seasonal structure:
+
+```{r}
+y |> filter(time<40) |> autoplot()
+
+```
+
+The two remaining procedures are merely wrappers for procedures that exist already: `cal_crit_uc` evaluates the negative log likelihood by a call to the Kalman filter. It returns 
+the log likelihood value. This provides the main ingredient for the likelihood maximization which is included in `est_uc`. 
+
+The estimation then can be done as follows (but does not result in good estimates in this case): 
+
+```{r}
+# convert data to matrix
+y_mat <- tsibble_to_mat(y)
+
+# same when starting from true value 
+suppressWarnings(theta_hat <- est_uc(t(y_mat), theta, iterlim=1000))
+
+thetas <- cbind(theta_hat$estimate,theta, theta_hat$estimate-theta)
+colnames(thetas) <- c("Estimates","True values","Estimation error")
+thetas
+
+```
+
+
+
+
+
+
+
+

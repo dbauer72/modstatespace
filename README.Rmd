@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+```{r global-options, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  warning = FALSE
+)
+```
+
+# modstatespace: Specification and estimation of linear time invariant state space models in R
+
+The **modstatespace** package provides a collection of procedures useful mainly for teaching linear time invariant (LTI) state space models. Many of the function are adapted from tools provided by Wolfgang Scherrer (TU Wien). 
+
+## Features
+
+- **Estimation for stationary processes:** The package features almost fully automatic estimates of LTI models.  
+- **Impulse response and covariance function plots:** allows to compare the impulse response and the covariance function corresponding to a set of systems. 
+
+## Installation
+
+You can install the stable version of **modstatespace** github: 
+
+```R
+pak::pak(modstatespace = github::dbauer72/modstatespace)
+```
+

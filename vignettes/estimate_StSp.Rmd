@@ -1,0 +1,104 @@
+---
+title: "Estimating a state space system of order n"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Estimating a state space system of order n}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+In this vignette we discuss the estimation of state space models. To this end we generate a simulated time series:
+
+```{r}
+A <- diag(2)*0.5
+C <- diag(2)
+K <- diag(2)
+Sigma <- diag(2)
+
+syst <- StSp(A=A, C=C,K=K,Sigma = Sigma, type = "innov")
+y <- sim_syst(syst, T=1000,stationary = TRUE)
+autoplot(y) 
+```
+
+# Using the CVA subspace approach
+
+Subspace methods are a numerical fast method to estimate state space systems. They rely on regressions and hence are very robust. As a rule-of-thumb one can say that CVA provides good results in situations where autoregressive modelling is attractive.
+
+The estimator requires a number of input arguments:
+
+```{r}
+y_mat <- tsibble_to_mat(y)
+syst_cva <- cal_CVA(t(y_mat), f=5, p=5, n=2)
+syst_cva
+```
+Here $f$ and $p$ in the literature are suggested to be chosen according to $2\hat k_{AIC}$, where $\hat k_{AIC}$ denotes the AIC estimated lag length in an autoregressive approximation.  
+
+We can see that the estimate is close to the true system. We can compare $-2$ times the log of the Gaussian likelihood at the estimate with the one at the true system:
+
+```{r}
+theta_0 <- syst_param(syst)
+theta_est <- syst_param(syst_cva)
+theta_est-theta_0
+
+cal_crit(as.vector(theta_est),n=2,s=2,t(y_mat))
+cal_crit(as.vector(theta_0),n=2,s=2,t(y_mat))
+```
+
+So CVA ist better than the true vector in the sense of the Gaussian likelihood.
+
+# Quasi Maximum Likelihood Estimation (qMLE)
+
+Using CVA as a starting value we may optimize the Gaussian likelihood.
+
+```{r}
+(theta_hat_pe <- nlm(cal_crit, p=theta_est, n=2, s=2, y=t(y_mat), pe =TRUE , print.level = 0, hessian = TRUE))
+
+cal_crit(as.vector(theta_hat_pe$estimate),n=2,s=2,t(y_mat))
+
+```
+
+The above minimization used the prediction error version of the estimator. We may also derive the actual Gaussian likelihood taking stationary initialization into account:
+
+```{r}
+suppressWarnings(theta_hat_pe <- nlm(cal_crit, p=theta_est, n=2, s=2, y=t(y_mat), pe =FALSE , print.level = 0, hessian = TRUE))
+
+cal_crit(as.vector(theta_hat_pe$estimate),n=2,s=2,t(y_mat))
+
+```
+
+This generates an estimated system and the corresponding standard errors: 
+
+```{r}
+syste <- param_syst(theta_hat_pe$estimate, n=2, s=2)
+
+theta_sd <- sqrt(diag(solve(theta_hat_pe$hessian)))
+
+summary_qmle( theta_hat_pe, n=2,s=2)
+```
+
+The function `est_qml` combines the steps above into a single command: 
+
+```{r}
+out_est <- est_qml(t(y_mat), n=2, kmax = 10, pe=TRUE, print.level=0,iterlim = 1000)
+
+summary_qmle( out_est,n=2, s=2)
+```
+
+
+

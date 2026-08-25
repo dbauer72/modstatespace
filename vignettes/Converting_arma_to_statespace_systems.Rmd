@@ -1,0 +1,203 @@
+---
+title: "Converting ARMA to state space"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Converting ARMA to state space}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+`modstatespace` works with state space systems. However, oftentimes systems are specified in the ARMA model. Sometimes as moving average models, sometimes as pure AR systems, but sometimes also including both parts. This vignette explains, how to work with such models by converting them to an equivalent state space model. 
+
+# ARMA models 
+Models for times series are often specified in the autoregressive moving average (ARMA) framework which uses difference equations to define the model.^[In the multivariate case $s>1$ sometimes the letter 'V' for vector is added to the akronym leading to 'VARMA', 'VAR' or 'VMA' systems. In this package this is not used and hence a 'ARMA' system could be univariate or multivariate. ] 
+A process is generated from an ARMA system, if it solves the difference equation:
+
+$$
+y_t = A_1 y_{t-1} + A_2 y_{t-2} + ... + A_p y_{t-p} + \varepsilon_t + B_1 \varepsilon_{t-1}  + ... + B_q \varepsilon_{t-q}
+$$
+
+for some index set $t \in {\mathbb T}$ which is most often ${\mathbb Z}$ or ${\mathbb N}$. The process $(y_t)_{t \in {\mathbb T}}$ can be $s$-dimensional. In that case $A_j \in {\mathbb R}^{s \times s}, j=1,...,p, B_j \in {\mathbb R}^{s \times s}, j=1,...,q$. $A_p \ne 0, B_q \ne 0$ is required to give some meaning to the integers $(p,q)$. 
+
+Moreover, the ARMA system corresponding to a process is not uniquely defined. To achieve identification, one has to pose 
+additional conditions: Define the lag polynomials $a(z)= I_s - A_1 z - A_2 z^2 - ...-A_p z^p$ and $b(z)= I_s + B_1 z + B_2 z^2 - ...-B_q z^q$ for the complex number $z \in {\mathbb C}$. Then for identification it must be assumed that the pair $(a(z),b(z))$ is left co-prime such that it does
+not contain common divisors. For the univariate case this implies that the polynomials do not have common zeros. In the 
+multivariate case the required assumptions are more complex, see [@HanDei]. 
+
+The solutions to such equations for white noise process $(\varepsilon_t)_{t \in {\mathbb T}}$ are called ARMA(p,q) 
+processes, if they are stationary (see for example [@HanDei]). 
+
+If ${\mathbb T} = {\mathbb N}$ the process is started at $t=1$ and then depends on starting values typically showing transitory behaviour after the start of the process. 
+
+Stationary solutions to the difference equations only exist, if the lag polynomial $a(z)= I_s - A_1 z - A_2 z^2 - ...-A_p z^p$ is non-zero on the closed unit circle. This condition is called 'stability condition'. 
+
+## Sepcial case: Autoregressive processes 
+If $q=0$ such that $b(z)=I_s$ one obtains autoregressive processes of order $p$ (AR(p)). These have the form of an autoregression. This model is often used, as it is simple to estimate via OLS and directly supplies forecasts. 
+
+In this situation the difference equation equals: 
+
+
+$$
+y_t = A_1 y_{t-1} + A_2 y_{t-2} + ... + A_p y_{t-p} + \varepsilon_t.
+$$
+
+It directly follows that the process explains its value as a weighted sum of the last $p$ values. 
+
+Using lag operator notation we can write the stationary solution for ${\mathbb T} = {\mathbb Z}$ under the stability condition as 
+
+$$
+(y_t)_{t \in {\mathbb Z} }= a(L)^{-1} (\varepsilon_t)_{t \in {\mathbb Z} }
+$$
+This representation corresponds directly to the Wold representation. 
+The impulse response coefficients $k_j$ for $a(z)^{-1} = \sum_{j=0}^\infty k_j z ^j$ follow from this representation. 
+
+This representation shows that a stationary AR(p) process can be rewritten as a MA($\infty$) process. 
+
+## Sepcial case: Moving average processes 
+If $p=0$ such that $a(z)=I_s$ one obtains moving average processes of order $q$ (MA(q)). These have the form of a weighted average. 
+In this situation the difference equation equals: 
+
+$$
+y_t = \varepsilon_t + B_1 \varepsilon_{t-1}  + ... + B_q \varepsilon_{t-q}.
+$$
+
+It directly follows that the process is stationary for all values of $B_j$.  
+
+Using lag operator notation we can write the stationary solution for ${\mathbb T} = {\mathbb Z}$ as 
+
+$$
+(y_t)_{t \in {\mathbb Z} }= b(L) (\varepsilon_t)_{t \in {\mathbb Z} }
+$$
+
+If all zeros of $\det (b(z))$ are outside the closed unit disc, there exists a Taylor series expansion for $b(z)^{-1}=\sum_{j=0}^\infty k_j^- z^j$. This property is sometimes called 'invertibility'^[When zeros on the unit root exist, but not inside, approximations by AR models exist. Some authors include these borderline cases in the definition of the term 'invertible'.] or 'strict minimum-phase condition'. 
+
+Using this representation we obtain 
+
+$$
+b(L)^{-1} (y_t)_{t \in {\mathbb Z} }= (\varepsilon_t)_{t \in {\mathbb Z} }
+$$
+or 
+
+$$
+\varepsilon_t = y_t + \sum_{j=1}^\infty k_j^- y_{t-j}.
+$$
+
+This representation shows that a strictly minimum-phase MA(q) process can be rewritten as an AR($\infty$) process. 
+
+## ARMA processes 
+Taking the previous two subsections jointly it follows that a stationary and strictly minimum-phase ARMA process 
+has an MA($\infty$) and an AR($\infty$) representation: 
+
+$$
+a(L)(y_t)_{t \in {\mathbb Z} }= b(L) (\varepsilon_t)_{t \in {\mathbb Z} } \Leftrightarrow 
+(y_t)_{t \in {\mathbb Z} }= a(L)^{-1} b(L) (\varepsilon_t)_{t \in {\mathbb Z} } \Leftrightarrow 
+(\varepsilon_t)_{t \in {\mathbb Z} }= b(L)^{-1} a(L) (y_t)_{t \in {\mathbb Z} }
+$$
+This coincides with the linearly regular component of the Wold decomposition, see [@HanDei]. 
+
+These representations imply, that every ARMA process can be approximated arbitrarily well by AR(p) and MA(q) models. The advantage of ARMA(p,q) models may lie in the flexibility to provide a better approximation for the same number of 
+parameters. Or a smaller number of parameters for the same approximation quality. Hence, ARMA models are said to be 'parsimonious'. 
+
+The main underlying stylized fact is the intuition that a lower dimensional parameter set allows for more accurate estimation of the parameters. If ARMA models are in fact better suited depends on the application, however. 
+
+# Relation to state space systems 
+ARMA models parameterise a subset of the set $M$ of rational transfer functions $a(z)^{-1}b(z)$. 
+This set is broken down into sets indexed by the integers $(p,q)$. In the multivariate case it can be shown that the two 
+integers are not enough to lead to a disjoint partitioning of the set of all transfer functions as there exists ARMA systems that are at the same time ARMA(1,0) and ARMA(0,1), for example, see [@HanDei], Chapter 2.
+
+Instead, often echelon forms are used to partition $M$ into sets $M_n$, where $n$ denotes the McMillan degree of a related transfer function. Then only one integer needs to be specified, which may be seen as an advantage. 
+
+[@HanDei] demonstrate that there exists a 1-1 relation between ARMA models in $M_n$ and state space systems with state dimension $n$. In fact, also the parameters are in 1-1 relation. 
+For this relation the state space systems are given in innovation form: 
+
+$$
+y_t = C x_t + \varepsilon_t, x_{t-1} = Ax_t + K \varepsilon_t,
+$$
+
+where $A \in {\mathbb R}^{n \times n}, C \in {\mathbb R}^{s \times n}, K \in {\mathbb R}^{n \times s}$. 
+Thus $x_t \in {\mathbb R}^n$.^[[@HanDei] use different symbols. In their notation $y_t = H x_t + \varepsilon_t, x_{t-1} = Fx_t + K \varepsilon_t$.] 
+
+For state space systems the stability condition is that all eigenvalues of $A$ are inside the unit circle. The invertibility condition relates to the eigenvalues of $F-KH$ being inside the unit circle. Both assumptions relate to
+minimal systems (such that the state dimension cannot be reduced). 
+
+In that case we get 
+$$
+y_t = \varepsilon_t + \sum_{j=1}^\infty CA^{j-1}K \varepsilon_{t-j}, \varepsilon_t = y_t - \sum_{j=1}^\infty C(A-KC)^{j-1}Ky_{t-j}. 
+$$
+such that $a(z)^{-1}b(z) = I_s+ \sum_{j=1}^\infty CA^{j-1}Kz^j = I_s + z C(I_n -zA)^{-1} K$. 
+
+This shows that every state space system in innovation form can be rewritten as a ARMA system and vice versa. 
+
+A simple way to rewrite an ARMA system is the following: 
+
+$$
+y_t = A_1 y_{t-1} + ... + A_p y_{t-p} + \varepsilon_t + B_1 \varepsilon_{t-1} + ... + B_q \varepsilon_{t-q}, 
+x_t = \left( \begin{array}{c} y_{t-1} \\ y_{t-2} \\ \vdots \\ y_{t-p} \\ \varepsilon_{t-1} \\ \vdots \\ \varepsilon_{t-q} \end{array} \right) \Rightarrow y_t = C x_t + \varepsilon_t 
+$$
+
+where $C = [A_1,...,A_p,B_1,...,B_q]$ such that $n = s(p+q)$. The corresponding state equation follows:
+
+$$
+A = \left( \begin{array}{cccccccc} 
+A_1 & ... & ... & A_p & B_1 & ... & ... & B_q \\
+I_s &  0  & ... & 0  &  0  & ... & ... &0 \\
+0 & \ddots & \ddots  & \vdots & \vdots & & & \vdots \\
+0 & ... & I_s & 0 & 0 & ... & ... & 0 \\
+0 & ... & 0 & 0 & 0 & ... & ... & 0 \\
+0 & ...    &  ...  &  0  & I_s & 0 &  ... & 0 \\
+\vdots &    &     & \vdots  & 0 & \ddots &\ddots  & \vdots \\
+0 & ...  &    ...  &  0  & 0 & ... & I_s & 0 
+ \end{array} \right), 
+ K = 
+ \left( \begin{array}{c} I_s \\ 0 \\ \vdots \\ 0 \\ I_s \\ 0 \\ \vdots \\ 0 \end{array} \right)
+$$
+
+This representation is not necessarily minimal, thus there may be a system corresponding to the same transfer function with a 
+smaller state dimension. 
+
+# Example: converting a MA(3)
+Consider the univariate MA(3) process:
+
+$$
+y_t = \varepsilon_t + 0.5 \varepsilon_{t-1} - \varepsilon_{t-2} + 4\varepsilon_{t-3}. 
+$$
+
+This ARMA system can be defined using a list:
+```{r} 
+MA <- list(a = matrix(1,1,1),b = matrix(c(1,0.5,-1,4),1,4), Sigma = diag(1))
+```
+
+Hereby, the ARMA(p,q) system is given by the two matrices a and b that contain the columnwise stacked coefficient matrices: 
+
+$$
+a = \begin{pmatrix} I_s & A_1 & ... & A_p \end{pmatrix}, 
+b = \begin{pmatrix} I_s & B_1 & ... & B_q \end{pmatrix}.
+$$
+
+It can then be converted to a state space system, whose impulse response sequence and covariance function can be plotted: 
+
+```{r} 
+syst <- arma2StSp(MA)
+plot_IR(syst, L=10)
+plot_cov(syst, L=10)
+```
+
+After the introduction of the state space representation above the system is converted to a minimal system. 
+
+## References 

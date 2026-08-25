@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^\.idea$
+^attic$
+^stat-consulsting-practical$
+_..scribble.R
+state_space_procs.R

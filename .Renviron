@@ -1,0 +1,10 @@
+
+# do not check system clock due to following error/note getting worldclockapi.com
+#   https://stackoverflow.com/a/63616156/1783801
+# ---
+# ❯ checking for future file timestamps ... NOTE
+#  unable to verify current time
+# ---
+_R_CHECK_SYSTEM_CLOCK_=0
+_R_CHECK_DONTTEST_EXAMPLES_=FALSE
+R_QPDF=/home/dbauer2@ad.uni-bielefeld.de/Dokumente/dbauer/R_Projects/qpdf/qpdf-12.3.2/local/bin/qpdf

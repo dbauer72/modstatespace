@@ -1,0 +1,226 @@
+---
+title: "Simulating from a state space system"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Simulating from a state space system}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+In this vignette we demonstrate how to generate data from a state space system. In order to to do, we must specify the following objects:
+
+-   the state space system,
+-   the variance matrices,
+-   the sample size,
+-   whether the data should be drawn from the stationary distribution (if this exists).
+
+## Specifying the state space system
+
+A state space system is defined using two equations: 
+
+$$
+\begin{array}{ccc}
+y_t & = & C x_t + v_t, \\
+x_{t+1} & = & A x_t + w_t. 
+\end{array} 
+$$
+
+Here $y_t$ is the *observed process* of dimension $s$ while $x_t$ denotes the latent (unobserved, that is) *state process*. Both processes are defined for $t=1,...,T$. Thus we assume that the process is observed at discrete, equally spaced time points. This is realistic for many data sets including:
+
+-   economic data measured at quarterly, monthly, weekly, daily frequency
+-   panel data sets obtained in consecutive panel waves 
+-   sensor data observed with a sampling frequency typically specified in Hertz.
+
+The state space system is defined by providing the matrices $A \in R^{n \times n}$ and $C \in R^{s \times n}$. Additionally the characteristics of the noises $v_t$ and $w_t$ must be specified. $v_t \in R^{s}$ is called measurement or observation noise and arises in the *observation equation*. 
+$w_t \in R^{n}$ is called state noise and arises in the *state equation*. 
+In this package it is always assumed that the joint noise process $(v_t',w_t')'$ is (weak) *white noise* with zero expectation. This implies that the covariance between noises at different time points is zero at
+all lags. 
+
+## The variance matrices 
+The variance of the joint noise process is partitioned as follows:
+
+$$
+V( \begin{pmatrix} v_t \\ w_t \end{pmatrix}) = \begin{pmatrix} R & S' \\ S & Q \end{pmatrix}. 
+$$
+
+There exists two special cases: 
+
+-  $w_t = Kv_t$: We obtain $S= KR, Q= KRK'$. This corresponds to the *innovation representation* of the process which is related to the Wold decomposition for stationary processes. 
+- $S=0$ such that measurement and state noise are uncorrelated. 
+
+
+## Observability, controllability and minimality 
+As the state is not observed directly, several representations of the state space system are equivalent. 
+It is shown in [@HanDei] that for a stationary process every state space system can be brought into 
+innovation form. Thus it is no restriction of generality to only work with the innovation representation. 
+
+But also the innovation representation is not unique. One source of non-uniquesness is the choice of the 
+basis of the state space: If the state space coordinate system is changed, the state space system still describes the same input-output map relating the observations $y_t$ to the noise processes $v_t, w_t$.
+
+A second sources of non-uniqueness comes from redundancies that may be present in the state space system. 
+Consider the following system: 
+
+$$
+\begin{array}{ccc}
+y_t & = & \begin{pmatrix} A_1 & 0 \end{pmatrix} x_t + v_t, \\
+x_{t+1} & = & \begin{pmatrix} x_{t+1,1}  \\  x_{t+1,2} \end{pmatrix} = \begin{pmatrix} A_{11} & 0 \\ A_{21} & A_{22} \end{pmatrix} x_t + \begin{pmatrix} K_{1}  \\ K_{2}  \end{pmatrix} v_t. 
+\end{array} 
+$$
+
+It follows that the second part of the state $x_{t,2}$ does not influence the observations $y_t$ and also 
+not the first part of the state $x_{t,1}$. Therefore, when only observing $y_t$, the value of $x_{t,2}$ is of no importance and we could instead reduce the model to 
+
+$$
+\begin{array}{ccc}
+y_t & = & C_1 x_{t,1} + v_t, \\
+x_{t+1,1} & = & A_{11}  x_{t,1} + K_1 v_t. 
+\end{array} 
+$$
+
+This is an example of a *not observable* system. 
+
+Analogously consider the system 
+
+$$
+\begin{array}{ccc}
+y_t & = & \begin{pmatrix} C_1 & C_2 \end{pmatrix} x_t + v_t, \\
+\begin{pmatrix} x_{t+1,1}  \\ x_{t+1,2} \end{pmatrix} & = & \begin{pmatrix} A_{11} & A_{12} \\ 0 & A_{22} \end{pmatrix} x_t + \begin{pmatrix} K_{1}  \\ 0  \end{pmatrix} v_t. 
+ \\
+y_t & = & C_1 x_{t,1} + v_t + C_2A_{22}^t x_{0,2}, \\
+x_{t+1,1} & = & A_{11} x_{t,1} + K_1 v_t + A_{12}A_{22}^t x_{0,2} 
+\end{array}
+$$
+Thus we may use the reduced system $(A_{11},C_1,K_1)$ treating the impact of $x_{0,2}$ as an additional 
+deterministic process. The original system is not *controllable*. 
+
+The corresponding concepts can be found in [@HanDei], Chapter 1. We can combine them to the concept of *minimality*: A state space system is called *minimal*, if it is observable and controllable. This is linked to the following three matrices: 
+
+$$
+\begin{array}{ccc}
+{\mathcal O} = \begin{pmatrix} C \\ CA \\ CA^2 \\ \vdots  \end{pmatrix}, & 
+{\mathcal C} = \begin{pmatrix} K & AK & A^2K & \cdots  \end{pmatrix}, &
+{\mathcal H} = {\mathcal OC}.
+\end{array} 
+$$
+The matrix ${\mathcal O}$ is called *observability matrix*. The system is observable, iff this matrix has
+full column rank $n$. The matrix ${\mathcal C}$ is called *controllability matrix*. The system is 
+controllable, if this matrix has full row rank. The matrix ${\mathcal H}$ is called *Hankel matrix*. A 
+system is called minimal, if the matrix $A \in R^{n \times n}$ where $n$ equals the rank of the Hankel 
+matrix. 
+
+In **modstatespace** a system can be reduced to minimality using the function `model_reduce`, that is implemented only for innovation representations. 
+
+## Stationarity 
+For the simulation an initial state needs to be provided. There are three main options in the literature:
+
+-  zero initial state 
+-  initial state corresponding to the stationary distribution
+-  random initial state.
+
+The first two can be achieved by choosing the Boolean argument 'stationary' in the procedure `sim_syst`. 
+The third one often is obtained when simulating an initial 'burn in' period that is not used 
+subsequently. 
+
+### Drawing from the stationary distribution of the state
+
+The state process is an autoregressive process of order $1$ and has the Markov property. In this package 
+it is always assumed that the noise has expectation zero at all times. 
+Therefore, the state also has expectation zero and  its variance evolves as follows:
+
+$$
+V(x_{t+1}) = P_{t+1} = A P_t A' + Q.
+$$
+Consequently stationarity leads to the equation 
+
+$$
+P = A P A' + Q.
+$$
+
+Such equations are called *Lyapunov equations*. As they are linear in $P$ they can be solved by 
+vectorization. Since $Q= Q'$ is symmetric, the solution $P$ is symmetric. Being a variance matrix $P$ 
+must also be positive semi-definite. This is equivalent to all eigenvalues of $A$ being smaller than one in modulus.
+
+Such matrices are called *stable*. Under stability then the Lyapunov equation delivers the variance of the state corresponding to the stationary solution of the state equation. 
+
+# Example simulation
+
+The theory above is demonstrated in this section. We follow the steps outlined above. First we specify a system, which we do on purpose non-minimal. 
+
+```{r}
+A <- 0.5* diag(3)
+C <- matrix(0,2,3)
+C[1,1] <- 1
+C[2,2] <- 1 
+C[2,1] <- 0.5 
+Q <- diag(3) 
+S <- matrix(0,3,2)
+R <- diag(2)
+
+syst <- StSp(A=A,C=C,Q=Q,S=S,R=R,type = 'UC')
+syst
+
+```
+
+With this system we can simulate a time series of length $T=1000$ with zero initial value: 
+
+
+```{r}
+set.seed(1)
+y <- sim_syst(syst,T= 1000,stationary=FALSE)
+autoplot(y)
+```
+
+Alternatively the initial state can be drawn from the stationary distribution: 
+
+```{r}
+set.seed(1)
+yst <- sim_syst(syst,T= 100,stationary=TRUE)
+autoplot(yst)
+```
+
+The two simulated series can be plotted to compare them:
+
+```{r}
+add_st <- function(st){paste(st,"st",sep='')}
+yst_2 <- yst |>  mutate(vars =  add_st(vars))
+yd <- y |> add_row(yst_2)
+yd |> filter(time<10) |> autoplot()
+
+```
+
+We see that they differ only in the first couple of instants. 
+As we know that the system is not minimal, we can reduce the order:
+
+```{r}
+systr <- model_reduce(syst)
+
+```
+
+Last we can compare the covariances between the original and the reduced system: 
+
+```{r}
+syst_v <- list()
+syst_v[[1]] <- syst
+syst_v[[2]] <- systr
+class(syst_v) <- "StSp"
+cov_orig <- covariance_function(syst_v,M=20,plots=1)
+```
+
+
+## References 

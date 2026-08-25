@@ -1,0 +1,195 @@
+---
+title: "Estimating an autoregression of order p"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{Estimating an autoregression of order p}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r knitr, include=FALSE}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.align='center', crop=T,
+  out.width="99%",
+  fig.height = 3.9, fig.width = 8
+  )
+```
+
+```{r setup}
+library(modstatespace)
+library(fpp3)
+```
+
+Autoregressive processes are the workhorse for time series modelling.
+They allow to model the temporal correlation in a form similar to
+regressions. This includes specification, estimation and prediction.
+This package provides functionality to handle autoregressions.
+
+## Definition
+
+A process $(y_t), t \in {\mathbb N}, y_t \in {\mathbb R}^s,$ is called
+an autoregressive process, if it is a solution to the equation
+
+$$y_t = A_1 y_{t-1} + \cdots + A_p y_{t-p} + \varepsilon_t, t=1,2,...$$
+for a white noise process
+$(\varepsilon_t), t \in {\mathbb N} \in {\mathbb R}^s$. In this package
+we only consider processes of zero expectation (so far, this is work in
+progress).
+
+The name *autoregression* stems from the form of the definition wherein
+the process is explained via a regression form with the regressor being
+lagged terms of the process itself. The integer $p$ is called the *lag
+length* or *order* of the autoregression, if the corresponding matrix
+$A_p$ is non-zero.
+
+The autoregressive equation always has a unique solution for given
+observations $y_0,...,y_{1-p}$. In the special case $p=1$ we have
+
+$$y_t = A_1 y_{t-1} + \varepsilon_t$$
+
+which can be iterated to get
+
+$$y_t = \varepsilon_t + A_1 \varepsilon_{t-1} + ...+ A_1^{t-1} \varepsilon_1 + A_1^t y_0.$$
+
+It follows that the properties of $y_t$ depend on the properties of the
+matrix $A_1$: If all eigenvalues of $A_1$ are smaller than one in
+absolute value, then $A_1^t \to 0$ for $t \to \infty$ and the dependence
+on the past vanishes as time passes. In this case the autoregression is
+*stable*, otherwise it is unstable.
+
+If some eigenvalues of $A_1$ have modulus $1$, however, the observation
+$y_0$ exerts a non-diminishing influence for all later time periods.
+
+For a stable autoregression there exists a special solution: Letting
+$y_0 = \sum_{j=0}^\infty A_1^j \varepsilon_{-j}$ (thus using the white
+noise for $t \in {\mathbb Z}$) we obtain a *stationary* solution that
+has (I) constant zero expectation, (II) constant variance solving the
+Lyapunov equation
+
+$$P = A_1 P A_1' + \Sigma$$
+
+where $\Sigma \in {\mathbb R}^{s \times s}$ denotes the variance of
+$\varepsilon_t$; and (III) constant covariance
+$\mbox{Cov}(y_t, y_{t-k}) = A_1^kP$.
+
+For a scalar process thus the correlation between $y_t$ and its lag
+$y_{t-k}$ equals $A_1^k$ and the variance equals $\Sigma/(1-A_1^2)$
+(demonstrating the importance of the stability condition, which in the
+scalar case amounts to $|A_1|<1$).
+
+Similar to differential equations we may rewrite an autoregression of
+order $p$ into a larger autoregressive system of order $1$:
+
+$$y_t = A_1 y_{t-1} + \cdots + A_p y_{t-p} + \varepsilon_t \Rightarrow 
+Z_t = \begin{pmatrix} y_t \\ y_{t-1} \\ \vdots \\ y_{t-p+1} \end{pmatrix} 
+= \underbrace{\begin{pmatrix} A_1 & A_2 & \cdots &\cdots & A_p\\ I_s & 0 & \cdots & \cdots & 0 \\ 0 & \ddots & \ddots & & \vdots \\ \vdots & \ddots & \ddots & \ddots & \vdots\\ 0 & \cdots & 0 & I_s & 0 \end{pmatrix}}_{\Pi}  Z_{t-1} + \underbrace{\begin{pmatrix} I_s \\ 0 \\ \vdots \\ 0 \end{pmatrix}}_{K}  \varepsilon_t. $$
+
+Thus, we obtain $Z_t = \Pi Z_{t-1} + K \varepsilon_t$. The stability
+condition now concerns the eigenvalues of the so called *companion*
+matrix $\Pi \in {\mathbb R}^{sp \times sp}$.
+
+Using this rewriting the AR(p) case can be seen as a special case of the
+AR(1) model.
+
+Checking the stability assumption can be done in two ways: consider the
+scalar AR(1) process with $A_1 = 0.9$ (stable case).
+
+```{r}
+A <- matrix(0.9,1,1)
+(stab_cond <- check_stability_ar(A))
+```
+
+The same procedure for $A_1 = 1.5$ detects the instability:
+
+```{r}
+A <- matrix(1.1,1,1)
+(stab_cond <- check_stability_ar(A))
+```
+
+Note that the pole in this case is inside the unit circle.
+
+The procedures also work for multivariate processes of lag order larger
+than one:
+
+```{r}
+A <- matrix(rnorm(8),2,4)
+(stab_cond <- check_stability_ar(A))
+
+A <- matrix(rnorm(8),2,4)*0.1
+(stab_cond <- check_stability_ar(A))
+```
+
+## Simulating from an autoregression
+
+In this package a time series corresponding to an autoregression can be
+simulated using the function `sim_ar`:
+
+```{r}
+A <- matrix(0.9,1,1)
+y_df <- sim_ar(A,Sigma=1,T=100,stationary =TRUE)
+autoplot(y_df)
+```
+
+An unstable AR(1) equation leads to an exponentially growing series:
+
+```{r}
+A <- matrix(1.1,1,1)
+y_df <- sim_ar(A,Sigma=1,T=100,stationary =TRUE)
+autoplot(y_df)
+```
+
+Also multivariate time series for lags higher than one can be simulated:
+
+```{r}
+A <- cbind(matrix(0,2,2),diag(2)*0.9)
+y_df <- sim_ar(A,Sigma=diag(2),T=1000,stationary =TRUE)
+autoplot(y_df)
+```
+
+## Estimation
+
+Since the autoregressive equation has the form of a regression, ordinary
+least squares (OLS) is the prime method for estimating the model.
+[@SchDei] provide also other estimators, the Yule-Walker estimator being
+the prime competitor. In the package only OLS estimation is performed.
+
+For OLS a regression is estimated for each coordinate process
+independently. The sample size needs to be reduced for these
+regressions, as for the first $p$ observations $y_1,...,y_p$ not all
+regressors have been measured. Thus for $y_t$ observed for $t=1,...,T$
+only $T-p$ equations can be included in the regression reducing the
+effective sample size to $T-p$.
+
+Otherwise regression is straightforward. The procedure `fit_ar` takes as
+arguments: + `y` the data set needs to be either of the structure
+obtained by simulating as above; or it needs to be a matrix with $s$
+rows and $T$ columns.
+
+- `k` the lag order; if $k=-1$ (default) lag length selection using
+  `AIC` is done.
+
+-  `kmax` the maximal lag order for`AIC` lag length selection.
+
+If the lag length is selected, then one model for each lag length is
+estimated based on the same subset of the data corresponding to the
+effective sample size for the largest model.
+
+```{r}
+ar2 <- fit_ar(y_df,k=2)
+summary(ar2)
+```
+
+The summary output first provides the estimate in the form of matrices.
+Subsequently the regressions using the base R function `lm` for each
+coordinate of the observed process is printed. The numbers are not
+exactly identical, as the OLS estimates implemented in `fit_ar` use the
+maximum likelihood estimates for the variance, while `lm` uses unbiased
+errors.
+
+## References
