@@ -14,7 +14,7 @@
 plot_IR <- function(syst_vec, channel_in=1, channel_out=1, L =20 ){
   
   # put all systems into a vector. 
-  if (inherits(syst_vec,"StSp")){
+  if (is.null(names(syst_vec)) == FALSE){
     syst_v <- list(1)
     syst_v[[1]] <- syst_vec
   } else {

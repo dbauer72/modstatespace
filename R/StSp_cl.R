@@ -332,8 +332,8 @@ covariance_function.StSp <- function(syst,M=20,plots=0){
       }
     }
     if (syst$type == "UC"){
-      ev <- eigen(syst$A)$values
-      if (max(abs(ev)) > 0.9999) {
+      ev <- max(abs(eigen(syst$A)$values))
+      if (ev > 0.9999) {
         # warn for eigenvalues
         warning("Covariance_function: A has eigenvalues on the unit circle! Adjusting.")
         A <- syst$A/ev*0.99
