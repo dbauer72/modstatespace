@@ -26,11 +26,11 @@ StSp(
 
 \item{Q}{nxn matrix of noise variance in state equation}
 
-\item{R}{sxs matrix of noise covariance in observaiton equation}
+\item{R}{sxs matrix of noise covariance in observation equation}
 
 \item{S}{nxs matrix of cross covariance}
 
-\item{type}{string; default: "innov" for innovation representation. Alternative "UC§ for unobserved components.}
+\item{type}{string; default: "innov" for innovation representation. Alternative "UC" for unobserved components.}
 }
 \value{
 syst StSp object

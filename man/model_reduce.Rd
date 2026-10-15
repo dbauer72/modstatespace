@@ -10,7 +10,7 @@ model_reduce(syst, tol = 1e-07)
 \arguments{
 \item{syst}{system matrices in StSp object form.}
 
-\item{tol}{cut of threshhold: singular values below this threshhold are neglected. Default set to 0.0000001.}
+\item{tol}{cut of threshold: singular values below this threshold are neglected. Default set to 0.0000001.}
 }
 \value{
 reduced order system

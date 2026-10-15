@@ -264,7 +264,7 @@ find_dim_ident <- function(s,lags = 0){
 #'
 #' @param n integer representing the order of the system to estimate
 #' @param C list of estimated covariances 
-#' @param lags integer vector containing the lgas contained in the list C.
+#' @param lags integer vector containing the lags contained in the list C.
 #' @param W covariance matrix of estimated C. 
 #' @param theta_init initial estimate. If not present, random initialisation is used. 
 #' @param print.level integer representing the level of `nlm` output to print. Defaults to `0` (print nothing).
