@@ -7,9 +7,9 @@
 #' @param K   nxs matrix
 #' @param Sigma   sxs innovation variance matrix
 #' @param Q   nxn matrix of noise variance in state equation
-#' @param R   sxs matrix of noise covariance in observaiton equation
+#' @param R   sxs matrix of noise covariance in observation equation
 #' @param S   nxs matrix of cross covariance
-#' @param type  string; default: "innov" for innovation representation. Alternative "UC§ for unobserved components. 
+#' @param type  string; default: "innov" for innovation representation. Alternative "UC" for unobserved components.
 #'
 #' @return syst StSp object
 #'
@@ -76,9 +76,9 @@ validate_StSp <- function(syst) {
 #' @param K   nxs matrix
 #' @param Sigma   sxs innovation variance matrix
 #' @param Q   nxn matrix of noise variance in state equation
-#' @param R   sxs matrix of noise covariance in observaiton equation
+#' @param R   sxs matrix of noise covariance in observation equation
 #' @param S   nxs matrix of cross covariance
-#' @param type  string; default: "innov" for innovation representation. Alternative "UC§ for unobserved components. 
+#' @param type  string; default: "innov" for innovation representation. Alternative "UC" for unobserved components.
 #'
 #' @return syst StSp object
 #' 
@@ -582,7 +582,7 @@ solve_shift <- function(cO,s=1){
 #' REMARK: Only works for systems in innovation form. 
 #'
 #' @param syst system matrices in StSp object form. 
-#' @param tol  cut of threshhold: singular values below this threshhold are neglected. Default set to 0.0000001. 
+#' @param tol  cut of threshold: singular values below this threshold are neglected. Default set to 0.0000001.
 #'
 #' @return reduced order system
 #'

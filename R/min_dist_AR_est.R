@@ -368,7 +368,7 @@ cov_seq_grad_AR <- function(theta,k,s,lags = 0,grad_bool = TRUE){
 #'
 #' @param k integer; lag length of the AR system to be estimated
 #' @param C list of estimated covariances 
-#' @param lags integer vector containing the lgas contained in the list C.
+#' @param lags integer vector containing the lags contained in the list C.
 #' @param W covariance matrix of estimated C. 
 #' @param theta_init initial estimate. If not present, random initialisation is used. 
 #' @param print.level integer representing the level of `nlm` output to print. Defaults to `0` (print nothing).

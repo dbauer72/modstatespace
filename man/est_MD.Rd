@@ -11,7 +11,7 @@ est_MD(n, C, lags = 0, W = NULL, theta_init = NULL, print.level = 0)
 
 \item{C}{list of estimated covariances}
 
-\item{lags}{integer vector containing the lgas contained in the list C.}
+\item{lags}{integer vector containing the lags contained in the list C.}
 
 \item{W}{covariance matrix of estimated C.}
 
