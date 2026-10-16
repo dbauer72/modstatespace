@@ -21,3 +21,8 @@ the \code{ggplot2} object of the plot
 \description{
 plot_IR plots the Impulse Response for a number of systems
 }
+\examples{
+\donttest{
+plot_IR()
+}
+}

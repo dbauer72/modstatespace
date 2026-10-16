@@ -8,6 +8,10 @@
 #' @return vector containing the extracted F, H, K parameters from the system matrices.
 #'
 #'
+#' @examples
+#' \donttest{
+#' syst_param()
+#' }
 #' @export
 #'
 syst_param <- function(syst){
@@ -69,6 +73,10 @@ syst_param <- function(syst){
 #' @return syst as a \code{StSp} object
 #'
 #'
+#' @examples
+#' \donttest{
+#' param_syst()
+#' }
 #' @export
 #'
 param_syst <- function(theta, n, s, gradient =FALSE){ # function definition with default parameters
@@ -139,6 +147,10 @@ param_syst <- function(theta, n, s, gradient =FALSE){ # function definition with
 #' @return systs. A list of \code{StSp} objects. First element is the system, the remaining the various derivatives.  
 #'
 #'
+#' @examples
+#' \donttest{
+#' param_syst_deriv()
+#' }
 #' @export
 #'
 param_syst_deriv <- function(theta, n, s){ # function definition with default parameters
@@ -222,9 +234,17 @@ param_syst_deriv <- function(theta, n, s){ # function definition with default pa
 #' @return list xhat, res, sigmat: list of matrices Sigmat, Kt: list of Kalman gains, ll: -2 times
 #'   log likelihood.
 #'
+#' @examples
+#' \donttest{
+#' kf()
+#' }
 #' @export
 #'
 #'
+#' @examples
+#' \donttest{
+#' kf()
+#' }
 #' @export
 #'
 kf <- function(y, syst, pe=TRUE, init=0){
@@ -377,6 +397,10 @@ kf <- function(y, syst, pe=TRUE, init=0){
 #' @return negative log likelihood of the model
 #'
 #'
+#' @examples
+#' \donttest{
+#' cal_crit()
+#' }
 #' @export
 #'
 cal_crit <- function(theta, n, s, y, pe=TRUE){
@@ -453,6 +477,10 @@ cal_crit <- function(theta, n, s, y, pe=TRUE){
 #' @return list of Kalman filter results
 #'
 #'
+#' @examples
+#' \donttest{
+#' cal_kf()
+#' }
 #' @export
 #'
 cal_kf <- function(theta, n, s, y, pe=TRUE){
@@ -508,6 +536,10 @@ cal_kf <- function(theta, n, s, y, pe=TRUE){
 #' @return list containing the estimated parameters; output of nlm..
 #'
 #'
+#' @examples
+#' \donttest{
+#' est_qml()
+#' }
 #' @export
 #'
 est_qml <- function(y, n, kmax, pe=TRUE, print.level=0, iterlim = 100){
@@ -571,6 +603,10 @@ est_qml <- function(y, n, kmax, pe=TRUE, print.level=0, iterlim = 100){
 #'
 #' @return output on screen.
 #'
+#' @examples
+#' \donttest{
+#' summary_qmle()
+#' }
 #' @export
 #'
 summary_qmle <- function ( theta_hat,n=1, s=1){

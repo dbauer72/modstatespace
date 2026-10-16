@@ -17,6 +17,10 @@
 #' @return criterion value of squared differences. 
 #'
 #'
+#' @examples
+#' \donttest{
+#' cal_crit_min_dist()
+#' }
 #' @export
 #'
 cal_crit_min_dist <- function(theta, n, s, C, lags = NULL, W = NULL){
@@ -65,6 +69,10 @@ cal_crit_min_dist <- function(theta, n, s, C, lags = NULL, W = NULL){
 #'
 #' @return list of matrices. First is solution, the rest the derivatives. 
 #'
+#' @examples
+#' \donttest{
+#' dLjapunov()
+#' }
 #' @export
 #'
 dLjapunov <- function(theta, n, s,grad_bool){
@@ -126,6 +134,10 @@ dLjapunov <- function(theta, n, s,grad_bool){
 #'
 #' @return matrix of vectorized covariances. First column actual values, remaining columns (if any) derivatives. 
 #'
+#' @examples
+#' \donttest{
+#' cov_seq_grad()
+#' }
 #' @export 
 #'
 cov_seq_grad <- function(theta,n,s,lags = 0,grad_bool = TRUE){
@@ -226,6 +238,10 @@ cov_seq_grad <- function(theta,n,s,lags = 0,grad_bool = TRUE){
 #'
 #' @return min_evs vector of minimal eigenvalues for different state dimensions.  
 #'
+#' @examples
+#' \donttest{
+#' find_dim_ident()
+#' }
 #' @export 
 #'
 find_dim_ident <- function(s,lags = 0){
@@ -272,6 +288,10 @@ find_dim_ident <- function(s,lags = 0){
 #' @return list containing the estimated parameters and the criterion function. 
 #'
 #'
+#' @examples
+#' \donttest{
+#' est_MD()
+#' }
 #' @export
 #'
 est_MD <- function(n, C, lags = 0, W=NULL , theta_init = NULL, print.level=0){

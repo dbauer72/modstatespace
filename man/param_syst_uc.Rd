@@ -17,3 +17,8 @@ This function converts a parameter vector \code{theta} into system matrices for 
 for a univariate quarterly time series with a doubly integrated trend, seasonal common cycles and a stationary
 added univariate signal.
 }
+\examples{
+\donttest{
+param_syst_uc()
+}
+}

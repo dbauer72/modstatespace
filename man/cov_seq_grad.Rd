@@ -23,3 +23,8 @@ matrix of vectorized covariances. First column actual values, remaining columns 
 \description{
 Calculate covariances for lags given in 'lags'.
 }
+\examples{
+\donttest{
+cov_seq_grad()
+}
+}

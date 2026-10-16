@@ -10,6 +10,10 @@
 #'             
 #' @return y real sxT matrix of observations. 
 #' 
+#' @examples
+#' \donttest{
+#' sim_syst()
+#' }
 #' @export
 sim_syst <- function(syst,T= 100,stationary = FALSE){
 

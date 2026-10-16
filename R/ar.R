@@ -14,6 +14,10 @@ globalVariables(c(".data"))
 #' @return matrix. Matrix with `k` lags of `y`.
 #'
 #'
+#' @examples
+#' \donttest{
+#' mlag()
+#' }
 #' @export
 #'
 mlag <- function(y, k) {
@@ -63,6 +67,10 @@ mlag <- function(y, k) {
 #' }
 #'
 #'
+#' @examples
+#' \donttest{
+#' fit_ar()
+#' }
 #' @export
 #'
 fit_ar <- function(y, k = -1, kmax = 10) {
@@ -187,6 +195,10 @@ fit_ar <- function(y, k = -1, kmax = 10) {
 #' #' 
 #' @return output on screen
 #'
+#' @examples
+#' \donttest{
+#' summary.ar_mod()
+#' }
 #' @export
 #' @method summary ar_mod
 #' 
@@ -222,6 +234,10 @@ summary.ar_mod <- function(object,...){
 
 
 #' @noRd
+#' @examples
+#' \donttest{
+#' print.summary.ar_mod()
+#' }
 #' @exportS3Method
 
 print.summary.ar_mod <- function(x, ...) {
@@ -360,6 +376,10 @@ print_est_sd <- function(est_sd, row_names = NULL, col_names = NULL) {
 #'   \item{`ysim`}{simulated time series observations in df format}
 #' }
 #'
+#' @examples
+#' \donttest{
+#' sim_ar()
+#' }
 #' @export
 #'
 sim_ar <- function(A,Sigma,T=100,stationary = TRUE){
@@ -382,6 +402,10 @@ sim_ar <- function(A,Sigma,T=100,stationary = TRUE){
 #'
 #' @return syst StSp object
 #'
+#' @examples
+#' \donttest{
+#' ar_to_StSp()
+#' }
 #' @export
 #'
 ar_to_StSp <- function(A,Sigma){
@@ -419,6 +443,10 @@ ar_to_StSp <- function(A,Sigma){
 #'
 #' @return stab_cond list containing the entries 'check' Boolean (TRUE, if stable) and 'poles' (eigenvalues of companion matrix)
 #'
+#' @examples
+#' \donttest{
+#' check_stability()
+#' }
 #' @export
 check_stability <- function(object)
 {
@@ -435,6 +463,10 @@ check_stability <- function(object)
 #'
 #' @return stab_cond list containing the entries 'check' Boolean (TRUE, if stable) and 'poles' (eigenvalues of companion matrix)
 #'
+#' @examples
+#' \donttest{
+#' check_stability_ar()
+#' }
 #' @export
 #'
 check_stability_ar <- function(A){  

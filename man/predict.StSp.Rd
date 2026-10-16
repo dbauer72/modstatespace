@@ -23,3 +23,8 @@ predictions
 prediction function
 calculates the predictions
 }
+\examples{
+\donttest{
+predict.StSp()
+}
+}

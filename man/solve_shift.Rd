@@ -17,3 +17,8 @@ A estimated matrix A
 \description{
 solve_shift provides the estimate of F using the shift invariance structure of cO.
 }
+\examples{
+\donttest{
+solve_shift()
+}
+}

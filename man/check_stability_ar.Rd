@@ -15,3 +15,8 @@ stab_cond list containing the entries 'check' Boolean (TRUE, if stable) and 'pol
 \description{
 check for stability of an AR system (via the eigenvalues of the companion form)
 }
+\examples{
+\donttest{
+check_stability_ar()
+}
+}

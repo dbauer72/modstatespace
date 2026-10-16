@@ -21,3 +21,8 @@ list of matrices with impulse response
 Calculate impulse response for a system
 System must be defined as a StSp object.
 }
+\examples{
+\donttest{
+impulse.StSp()
+}
+}

@@ -38,3 +38,8 @@ syst StSp object
 \description{
 user helper function: supports users to define the StSp object.
 }
+\examples{
+\donttest{
+StSp()
+}
+}

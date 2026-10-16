@@ -20,3 +20,8 @@ list of matrices with covariance sequence
 Calculate first M covariances for matrix system
 Remark: F matrix needs to be stable.
 }
+\examples{
+\donttest{
+covariance_function()
+}
+}

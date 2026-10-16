@@ -19,3 +19,8 @@ list of matrices with transfer function at Fourier frequencies
 \description{
 generic method for transfer function (including plotting)
 }
+\examples{
+\donttest{
+transfer_function()
+}
+}

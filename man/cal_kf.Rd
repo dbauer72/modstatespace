@@ -24,3 +24,8 @@ list of Kalman filter results
 This function calculates the Kalman filter output using the parameters theta, the number of states n, the number of outputs s, the data y and a Boolean pe as input.
 It returns the Kalman filter output as a list containing the estimated states, the residuals, the innovation variance, the Kalman gain and the negative log likelihood.
 }
+\examples{
+\donttest{
+cal_kf()
+}
+}

@@ -23,3 +23,8 @@ filtered series in tsibble form.
 \description{
 Filter using a state space system
 }
+\examples{
+\donttest{
+lin_filter()
+}
+}

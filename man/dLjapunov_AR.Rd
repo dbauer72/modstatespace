@@ -26,3 +26,8 @@ as well as its derivative with respect to the parameter vector theta
 (for a system with output dimension s and lag length p).
 The output is given as a list of matrices.
 }
+\examples{
+\donttest{
+dLjapunov_AR()
+}
+}

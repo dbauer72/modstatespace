@@ -25,3 +25,8 @@ The multivariate version uses two intertwined recursions according to Hannan and
 
 Each AR models is characterised using (I) the estimated coefficients, (II) the innovation variance Sigma and (III) the PACC.
 }
+\examples{
+\donttest{
+durbin_levinson()
+}
+}

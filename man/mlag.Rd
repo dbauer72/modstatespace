@@ -19,3 +19,8 @@ matrix. Matrix with \code{k} lags of \code{y}.
 where each column contains the \code{k} lags of the corresponding column in \code{y}.
 First row of returned matrix start with column \code{k} of \code{y}, last row starts with column 1
 }
+\examples{
+\donttest{
+mlag()
+}
+}

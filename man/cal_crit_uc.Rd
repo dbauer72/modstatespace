@@ -17,3 +17,8 @@ negative log likelihood
 \description{
 This function calculates the criterion function, i.e. the negative log likelihood, for an unobserved components model given the parameter vector \code{theta} and observed data \code{y}.
 }
+\examples{
+\donttest{
+cal_crit_uc()
+}
+}

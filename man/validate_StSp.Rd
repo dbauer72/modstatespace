@@ -15,3 +15,8 @@ syst StSp object
 \description{
 validator method for verifying the created StSp object is valid.
 }
+\examples{
+\donttest{
+validate_StSp()
+}
+}

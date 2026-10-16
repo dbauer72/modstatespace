@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(modstatespace)
 library(fpp3)
+library(rlang)
+library(magrittr)
 ```
 
 `modstatespace` uses `tsibble` from the package `tsibble` (part of the tidyverse) as the data container.

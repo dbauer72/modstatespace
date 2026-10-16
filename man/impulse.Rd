@@ -19,3 +19,8 @@ on screen information
 \description{
 generic method for plotting the impulse response function
 }
+\examples{
+\donttest{
+impulse()
+}
+}

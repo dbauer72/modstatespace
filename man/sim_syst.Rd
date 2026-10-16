@@ -21,3 +21,8 @@ Time series data of length T is simulated using Gaussian innovations from the st
 space system supplied.
 The state space system must be in innovation form.
 }
+\examples{
+\donttest{
+sim_syst()
+}
+}

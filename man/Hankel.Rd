@@ -19,3 +19,8 @@ reduced order system
 \description{
 Calculates the Hankel matrix.
 }
+\examples{
+\donttest{
+Hankel()
+}
+}
