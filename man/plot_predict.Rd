@@ -17,3 +17,8 @@ ggplot2 object containing the plot
 \description{
 plots the predictions
 }
+\examples{
+\donttest{
+plot_predict()
+}
+}

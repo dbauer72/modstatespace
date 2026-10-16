@@ -9,6 +9,10 @@
 #' 
 #' @return predictions
 #'
+#' @examples
+#' \donttest{
+#' predict.StSp()
+#' }
 #' @export 
 #' @method predict StSp
 predict.StSp <- function (syst, y, h=1,T_est_val = 1) {
@@ -88,6 +92,10 @@ predict.StSp <- function (syst, y, h=1,T_est_val = 1) {
 #' 
 #' @return ggplot2 object containing the plot 
 #'
+#' @examples
+#' \donttest{
+#' plot_predict()
+#' }
 #' @export 
 #'
 plot_predict <- function (pr, window = NULL) {

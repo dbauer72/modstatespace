@@ -18,3 +18,8 @@ output on screen
 \description{
 Summary function provides a summary for an estimated AR(k) model.
 }
+\examples{
+\donttest{
+summary.ar_mod()
+}
+}

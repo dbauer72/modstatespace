@@ -25,3 +25,8 @@ This function calculates the criterion function with help of the Kalman filter a
 It takes the parameter vector theta, the number of states n, the number of outputs s, the data y and a Boolean pe as input.
 It returns the negative log likelihood of the model parameters.
 }
+\examples{
+\donttest{
+cal_crit()
+}
+}

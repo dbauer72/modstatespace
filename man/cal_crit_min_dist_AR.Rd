@@ -30,3 +30,8 @@ It takes the parameter vector theta, the lag length p, the number of outputs s, 
 a weighting matrix W (to account for heteroscedasticity) as input.
 It returns the corresponding squared difference.
 }
+\examples{
+\donttest{
+cal_crit_min_dist_AR()
+}
+}

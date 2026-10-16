@@ -8,6 +8,10 @@
 #'
 #' @return syst a \code{StSp} object.
 #'
+#' @examples
+#' \donttest{
+#' arma2StSp()
+#' }
 #' @export
 #'
 arma2StSp <- function(arma){

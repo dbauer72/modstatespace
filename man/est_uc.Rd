@@ -23,3 +23,8 @@ list containing the estimated parameters.
 \description{
 This function estimates the parameters of an unobserved components model using a nonlinear least squares approach.
 }
+\examples{
+\donttest{
+est_uc()
+}
+}

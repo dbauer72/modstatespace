@@ -16,6 +16,10 @@
 #' @return list of information for estimated AR systems. (I) (a_j(p)), (II) Sigma_p (III) rho_{p,p}.  
 #'
 #'
+#' @examples
+#' \donttest{
+#' durbin_levinson()
+#' }
 #' @export
 #'
 durbin_levinson <- function(C, L) {

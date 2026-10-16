@@ -19,3 +19,8 @@ min_evs vector of minimal eigenvalues for different state dimensions.
 Find the largest state dimension that leads to an identifiable system
 given the lags contained in the sequence.
 }
+\examples{
+\donttest{
+find_dim_ident()
+}
+}

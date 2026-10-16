@@ -17,3 +17,8 @@ syst StSp object
 \description{
 Convert an AR(k) into a state space system using the companion form.
 }
+\examples{
+\donttest{
+ar_to_StSp()
+}
+}

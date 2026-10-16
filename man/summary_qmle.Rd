@@ -19,3 +19,8 @@ output on screen.
 \description{
 summary of qMLE output
 }
+\examples{
+\donttest{
+summary_qmle()
+}
+}

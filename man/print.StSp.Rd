@@ -17,3 +17,8 @@ on screen information
 \description{
 print function: prints a StSp system object in a nice way.
 }
+\examples{
+\donttest{
+print.StSp()
+}
+}

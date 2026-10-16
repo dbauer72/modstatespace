@@ -21,3 +21,8 @@ the tibble data file
 \description{
 plot_cov plots the covariance sequence for a number of systems
 }
+\examples{
+\donttest{
+plot_cov()
+}
+}

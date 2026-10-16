@@ -28,3 +28,8 @@ fit_ar(y, k = -1, kmax = 10)
 Fit  model with optional AIC selection of optimal lag length
 \strong{REMARK}: Subsample is built using kmax lags.
 }
+\examples{
+\donttest{
+fit_ar()
+}
+}

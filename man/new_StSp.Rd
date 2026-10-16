@@ -41,3 +41,8 @@ syst StSp object
 \description{
 constructor method for StSp object
 }
+\examples{
+\donttest{
+new_StSp()
+}
+}

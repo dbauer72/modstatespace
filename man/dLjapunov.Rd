@@ -23,3 +23,8 @@ This function calculates the solution to the Ljapunov equation P = F P F' + K Om
 its derivative with respect to the parameter vector theta (for a system with output dimension s and state dimension n).
 The output is given as a list of matrices.
 }
+\examples{
+\donttest{
+dLjapunov()
+}
+}

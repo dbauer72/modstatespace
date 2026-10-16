@@ -17,3 +17,8 @@ matrix Gamma_p.
 \description{
 Calculates the Toeplitz matrix.
 }
+\examples{
+\donttest{
+Toeplitz()
+}
+}

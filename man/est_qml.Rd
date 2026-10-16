@@ -25,3 +25,8 @@ list containing the estimated parameters; output of nlm..
 \description{
 qML estimation for system of order n using CVA initial estimate
 }
+\examples{
+\donttest{
+est_qml()
+}
+}

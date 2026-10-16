@@ -24,3 +24,11 @@ log likelihood.
 This function calculates the Kalman filter for system (A, K, C) given as matrices.
 General form using Sigma (innovation variance), Q (variance of state noise), S (cross covariance).
 }
+\examples{
+\donttest{
+kf()
+}
+\donttest{
+kf()
+}
+}

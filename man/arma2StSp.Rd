@@ -16,3 +16,8 @@ syst a \code{StSp} object.
 This function converts an ARMA system specified in a list with matrices 'a' and 'b' and innovation variance 'Sigma' to an innovation
 state space system (F,H,K) and Sigma.
 }
+\examples{
+\donttest{
+arma2StSp()
+}
+}

@@ -25,3 +25,8 @@ list containing the estimated parameters and the criterion function.
 \description{
 MD estimation for system of order n matches estimated covariances.
 }
+\examples{
+\donttest{
+est_MD_AR()
+}
+}

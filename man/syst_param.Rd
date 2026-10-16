@@ -15,3 +15,8 @@ vector containing the extracted F, H, K parameters from the system matrices.
 \description{
 This function extracts the parameters from the system matrices (F, H, K) and returns them in vector form.
 }
+\examples{
+\donttest{
+syst_param()
+}
+}

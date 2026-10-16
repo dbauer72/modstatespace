@@ -13,6 +13,10 @@
 #'
 #' @return syst StSp object
 #'
+#' @examples
+#' \donttest{
+#' new_StSp()
+#' }
 #' @export
 #'
 new_StSp <- function(syst,A=as.matrix(0.5), C=as.matrix(1), K=as.matrix(1),Sigma = as.matrix(1),Q=as.matrix(1),R=as.matrix(1),S = as.matrix(1),type ="innov")
@@ -38,6 +42,10 @@ new_StSp <- function(syst,A=as.matrix(0.5), C=as.matrix(1), K=as.matrix(1),Sigma
 #'
 #' @return syst StSp object
 #' 
+#' @examples
+#' \donttest{
+#' validate_StSp()
+#' }
 #' @export
 #'
 validate_StSp <- function(syst) {
@@ -82,6 +90,10 @@ validate_StSp <- function(syst) {
 #'
 #' @return syst StSp object
 #' 
+#' @examples
+#' \donttest{
+#' StSp()
+#' }
 #' @export
 #'
 StSp <- function(A=as.matrix(0.5), C=as.matrix(1), K=as.matrix(1),Sigma = as.matrix(1),Q=as.matrix(1),R=as.matrix(1),S = as.matrix(1),type ="innov") {
@@ -103,6 +115,10 @@ StSp <- function(A=as.matrix(0.5), C=as.matrix(1), K=as.matrix(1),Sigma = as.mat
 #'
 #' @return on screen information
 #'
+#' @examples
+#' \donttest{
+#' print.StSp()
+#' }
 #' @export
 #' @method print StSp
 #'
@@ -174,6 +190,10 @@ print.StSp <- function(x,...){
 #'
 #' @return on screen information
 #'
+#' @examples
+#' \donttest{
+#' impulse()
+#' }
 #' @export
 impulse <- function(syst, M, plots)
 {
@@ -193,6 +213,10 @@ impulse <- function(syst, M, plots)
 #'
 #' @return list of matrices with impulse response
 #'
+#' @examples
+#' \donttest{
+#' impulse.StSp()
+#' }
 #' @export 
 #' @method impulse StSp
 #'
@@ -267,6 +291,10 @@ impulse.StSp <- function(syst, M=20,plots=0){
 #'
 #' @return list of matrices with covariance sequence
 #'
+#' @examples
+#' \donttest{
+#' covariance_function()
+#' }
 #' @export
 covariance_function <- function(syst, M,plots)
 {
@@ -286,6 +314,10 @@ covariance_function <- function(syst, M,plots)
 #'
 #' @return list of matrices with covariance sequence
 #'
+#' @examples
+#' \donttest{
+#' covariance_function.StSp()
+#' }
 #' @export 
 #' @method covariance_function StSp
 #'
@@ -377,6 +409,10 @@ covariance_function.StSp <- function(syst,M=20,plots=0){
 #'
 #' @return list of matrices with transfer function at Fourier frequencies
 #'
+#' @examples
+#' \donttest{
+#' transfer_function()
+#' }
 #' @export
 transfer_function <- function(syst, M, plots)
 {
@@ -393,6 +429,10 @@ transfer_function <- function(syst, M, plots)
 #'
 #' @return list of matrices with transfer function at Fourier frequencies
 #'
+#' @examples
+#' \donttest{
+#' transfer_function.StSp()
+#' }
 #' @export 
 #' @method transfer_function StSp
 #'
@@ -476,6 +516,10 @@ transfer_function.StSp <- function(syst,M=100,plots=0){
 #'
 #' @return filtered series in tsibble form. 
 #'
+#' @examples
+#' \donttest{
+#' lin_filter()
+#' }
 #' @export
 lin_filter <- function(syst, u, xinit=NULL, factor = 1, plots)
 {
@@ -497,6 +541,10 @@ lin_filter <- function(syst, u, xinit=NULL, factor = 1, plots)
 #'
 #' @return filtered series in tsibble form. 
 #'
+#' @examples
+#' \donttest{
+#' lin_filter.StSp()
+#' }
 #' @export
 #' @method lin_filter StSp
 #'
@@ -559,6 +607,10 @@ lin_filter.StSp <- function(syst,u,xinit=NULL,factor = 1, plots=0){
 #' 
 #' @return A estimated matrix A
 #' 
+#' @examples
+#' \donttest{
+#' solve_shift()
+#' }
 #' @export
 #'
 solve_shift <- function(cO,s=1){
@@ -586,6 +638,10 @@ solve_shift <- function(cO,s=1){
 #'
 #' @return reduced order system
 #'
+#' @examples
+#' \donttest{
+#' model_reduce()
+#' }
 #' @export
 #'
 model_reduce <- function(syst,tol=0.0000001){
@@ -663,6 +719,10 @@ model_reduce <- function(syst,tol=0.0000001){
 #'
 #' @return reduced order system
 #'
+#' @examples
+#' \donttest{
+#' Hankel()
+#' }
 #' @export
 #'
 Hankel <- function(syst, krow = 10, kcol=10){
@@ -699,6 +759,10 @@ Hankel <- function(syst, krow = 10, kcol=10){
 #'
 #' @return matrix Gamma_p. 
 #'
+#' @examples
+#' \donttest{
+#' Toeplitz()
+#' }
 #' @export
 #'
 Toeplitz <- function(Cv,krow = 10){
@@ -729,6 +793,10 @@ Toeplitz <- function(Cv,krow = 10){
 #'
 #' @return stab_cond list containing the entries 'check' Boolean (TRUE, if stable) and 'poles' (eigenvalues of companion matrix)
 #'
+#' @examples
+#' \donttest{
+#' check_stability.StSp()
+#' }
 #' @export
 #'
 check_stability.StSp <- function(object){  
@@ -801,6 +869,10 @@ conv_syst <- function(syst){
 #' @return syst a \code{StSp} object
 #'
 #'
+#' @examples
+#' \donttest{
+#' conv_to_innov()
+#' }
 #' @export
 #'
 conv_to_innov <- function(syst){

@@ -15,3 +15,8 @@ syst a \code{StSp} object
 \description{
 Convert system to innovation representation.
 }
+\examples{
+\donttest{
+conv_to_innov()
+}
+}

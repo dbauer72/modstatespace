@@ -2,7 +2,7 @@
 % Please edit documentation in R/ts_to_df.R
 \name{tsibble_to_mat}
 \alias{tsibble_to_mat}
-\title{Convert a \code{\link[tsibble:tsibble]{tsibble}} object to a \code{\link{matrix}}}
+\title{Convert a \code{\link{tsibble}} object to a \code{\link{matrix}}}
 \usage{
 tsibble_to_mat(ts_obj, var_name = "y")
 }
@@ -17,4 +17,9 @@ matrix; containing the data in matrix form.
 \description{
 The matrix returned contains the variables in columns, while the time column makes up
 the rownames.
+}
+\examples{
+\donttest{
+tsibble_to_mat()
+}
 }

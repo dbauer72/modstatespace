@@ -24,3 +24,8 @@ list.
 \description{
 Receiving the parameters of an AR(p) process, this function creates the according companion matrix for it, and simulates the system.
 }
+\examples{
+\donttest{
+sim_ar()
+}
+}

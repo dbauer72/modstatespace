@@ -24,3 +24,8 @@ For this we need to know the lag length p and the output dimension s.
 Adds also the lower triangular part of the Cholesky factor for the innovation variance sigma to
 the parameter vector.
 }
+\examples{
+\donttest{
+param_syst_deriv_AR()
+}
+}

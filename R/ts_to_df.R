@@ -10,6 +10,10 @@
 #' 
 #' @return matrix; containing the data in matrix form. 
 #'
+#' @examples
+#' \donttest{
+#' tsibble_to_mat()
+#' }
 #' @export
 #'
 tsibble_to_mat <- function(ts_obj,var_name = "y"){

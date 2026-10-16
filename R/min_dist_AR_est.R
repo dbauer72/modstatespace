@@ -18,6 +18,10 @@
 #' @return criterion value of squared differences. 
 #'
 #'
+#' @examples
+#' \donttest{
+#' cal_crit_min_dist_AR()
+#' }
 #' @export
 #'
 cal_crit_min_dist_AR <- function(theta, k, s, C, lags = NULL, W = NULL){
@@ -69,6 +73,10 @@ cal_crit_min_dist_AR <- function(theta, k, s, C, lags = NULL, W = NULL){
 #'
 #' @return list of matrices. First is solution, the rest the derivatives. 
 #'
+#' @examples
+#' \donttest{
+#' dLjapunov_AR()
+#' }
 #' @export
 #'
 dLjapunov_AR <- function(theta, k, s,grad_bool){
@@ -135,6 +143,10 @@ dLjapunov_AR <- function(theta, k, s,grad_bool){
 #' @return syst as a \code{StSp} object
 #'
 #'
+#' @examples
+#' \donttest{
+#' param_syst_AR()
+#' }
 #' @export
 #'
 param_syst_AR <- function(theta, k, s){ # function definition with default parameters
@@ -192,6 +204,10 @@ param_syst_AR <- function(theta, k, s){ # function definition with default param
 #' @return systs. A list of \code{StSp} objects. First element is the system, the remaining the various derivatives.  
 #'
 #'
+#' @examples
+#' \donttest{
+#' param_syst_deriv_AR()
+#' }
 #' @export
 #'
 param_syst_deriv_AR <- function(theta, k, s){ # function definition with default parameters
@@ -267,6 +283,10 @@ param_syst_deriv_AR <- function(theta, k, s){ # function definition with default
 #'
 #' @return matrix of vectorized covariances. First column actual values, remaining columns (if any) derivatives. 
 #'
+#' @examples
+#' \donttest{
+#' cov_seq_grad_AR()
+#' }
 #' @export 
 #'
 cov_seq_grad_AR <- function(theta,k,s,lags = 0,grad_bool = TRUE){
@@ -376,6 +396,10 @@ cov_seq_grad_AR <- function(theta,k,s,lags = 0,grad_bool = TRUE){
 #' @return list containing the estimated parameters and the criterion function. 
 #'
 #'
+#' @examples
+#' \donttest{
+#' est_MD_AR()
+#' }
 #' @export
 #'
 est_MD_AR <- function(k=1, C, lags = 0, W=NULL , theta_init = NULL, print.level=0){

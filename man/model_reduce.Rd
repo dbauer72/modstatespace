@@ -19,3 +19,8 @@ reduced order system
 Reduces the model to a minimal system eliminating non-obervability and non-controllabilty.
 REMARK: Only works for systems in innovation form.
 }
+\examples{
+\donttest{
+model_reduce()
+}
+}

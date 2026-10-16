@@ -24,3 +24,8 @@ For this we need to know the state dimension n and the output dimension s.
 Adds also the lower triangular part of the Cholesky factor for the innovation variance sigma to
 the parameter vector.
 }
+\examples{
+\donttest{
+param_syst_AR()
+}
+}

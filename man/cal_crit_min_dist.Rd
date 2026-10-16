@@ -29,3 +29,8 @@ It takes the parameter vector theta, the number of states n, the number of outpu
 a weighting matrix W as input.
 It returns the corresponding squared difference.
 }
+\examples{
+\donttest{
+cal_crit_min_dist()
+}
+}

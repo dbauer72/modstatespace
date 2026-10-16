@@ -9,6 +9,10 @@
 #'
 #' @return list of system matrices A, K, C, Sigma, Q
 #'
+#' @examples
+#' \donttest{
+#' param_syst_uc()
+#' }
 #' @export
 #'
 param_syst_uc <- function(theta){
@@ -57,6 +61,10 @@ param_syst_uc <- function(theta){
 #'
 #' @return negative log likelihood
 #'
+#' @examples
+#' \donttest{
+#' cal_crit_uc()
+#' }
 #' @export
 #'
 cal_crit_uc <- function(theta, y){
@@ -95,6 +103,10 @@ cal_crit_uc <- function(theta, y){
 #' @return list containing the estimated parameters.
 #'
 #'
+#' @examples
+#' \donttest{
+#' est_uc()
+#' }
 #' @export
 #'
 est_uc <- function(y, theta_init, iterlim=100, initialize=FALSE, print.level=0){
